@@ -13,6 +13,8 @@ export class HomeComponent implements OnInit {
   constructor(private productService: ProductService) { }
 
   ngOnInit() {
-    this.products = this.productService.getProducts();
+   this.productService.getProducts().subscribe(
+    (data: Product[]) => this.products = data
+   );
   }
 }

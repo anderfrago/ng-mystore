@@ -1,75 +1,91 @@
-import {Injectable} from '@angular/core';
-import {Product} from './product';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-@Injectable()
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, tap, map } from 'rxjs/operators';
+
+import { Product } from './product';
+
+@Injectable({
+  providedIn: 'root'
+})
 export class ProductService {
+  private productsUrl = 'api/products';
 
-  getProducts(): Product[] {
-    return products;
+  constructor(private http: HttpClient) { }
+
+  getProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.productsUrl)
+      .pipe(
+        tap(data => console.log(JSON.stringify(data))),
+        catchError(this.handleError)
+      );
   }
 
-  getProductById(productId: number): Product {
-    return products.find(p => p.id === productId);
+  getMaxProductId(): Observable<Product> {
+    return this.http.get<Product[]>(this.productsUrl)
+    .pipe(
+      // Get max value from an array
+      map(data => Math.max.apply(Math, data.map(function(o) { return o.id; }))   ),
+      catchError(this.handleError)
+    );
   }
-  
-  getAllCategories(): string[] {
-    return ['Books', 'Electronics', 'Hardware'];
+
+  getProductById(id: number): Observable<Product> {
+    const url = `${this.productsUrl}/${id}`;
+    return this.http.get<Product>(url)
+      .pipe(
+        tap(data => console.log('getProduct: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
   }
+
+  createProduct(product: Product): Observable<Product> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    product.id = null;
+    return this.http.post<Product>(this.productsUrl, product, { headers: headers })
+      .pipe(
+        tap(data => console.log('createProduct: ' + JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
+  deleteProduct(id: number): Observable<{}> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const url = `${this.productsUrl}/${id}`;
+    return this.http.delete<Product>(url, { headers: headers })
+      .pipe(
+        tap(data => console.log('deleteProduct: ' + id)),
+        catchError(this.handleError)
+      );
+  }
+
+  updateProduct(product: Product): Observable<Product> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const url = `${this.productsUrl}/${product.id}`;
+    return this.http.put<Product>(url, product, { headers: headers })
+      .pipe(
+        tap(() => console.log('updateProduct: ' + product.id)),
+        // Return the product on an update
+        map(() => product),
+        catchError(this.handleError)
+      );
+  }
+
+  private handleError(err) {
+    // in a real world app, we may send the server to some remote logging infrastructure
+    // instead of just logging it to the console
+    let errorMessage: string;
+    if (err.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      errorMessage = `An error occurred: ${err.error.message}`;
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      errorMessage = `Backend returned code ${err.status}: ${err.body.error}`;
+    }
+    console.error(err);
+    return throwError(errorMessage);
+  }
+
 }
-
-const products = [
-  {
-    "id": 0,
-    "title": "First Product",
-    "price": 24.99,
-    "rating": 4.3,
-    "shortDescription": "This is a short description of the First Product",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "categories": ["electronics", "hardware"]
-  },
-  {
-    "id": 1,
-    "title": "Second Product",
-    "price": 64.99,
-    "rating": 3.5,
-    "shortDescription": "This is a short description of the Second Product",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "categories": ["books"]
-  },
-  {
-    "id": 2,
-    "title": "Third Product",
-    "price": 74.99,
-    "rating": 4.2,
-    "shortDescription": "This is a short description of the Third Product",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "categories": ["electronics"]
-  },
-  {
-    "id": 3,
-    "title": "Fourth Product",
-    "price": 84.99,
-    "rating": 3.9,
-    "shortDescription": "This is a short description of the Fourth Product",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "categories": ["hardware"]
-  },
-  {
-    "id": 4,
-    "title": "Fifth Product",
-    "price": 94.99,
-    "rating": 5,
-    "shortDescription": "This is a short description of the Fifth Product",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "categories": ["electronics", "hardware"]
-  },
-  {
-    "id": 5,
-    "title": "Sixth Product",
-    "price": 54.99,
-    "rating": 4.6,
-    "shortDescription": "This is a short description of the Sixth Product",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "categories": ["books"]
-  }
-];

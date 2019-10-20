@@ -17,7 +17,12 @@ export class NavbarComponent implements OnInit {
   }
 
   newProduct(){
-     
+      // Get max product Id from the product list
+      this.productService.getMaxProductId().subscribe(
+        data => this.id = data
+      );
+      this.router.navigate(['/products', this.id, 'new'])
+
   }
 
 }
