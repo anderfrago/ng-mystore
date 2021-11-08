@@ -1,38 +1,67 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChildren, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators, FormControlName } from '@angular/forms';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  ViewChildren,
+  ElementRef,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  FormArray,
+  Validators,
+  FormControlName,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Product } from '../shared/product';
-import { ProductService } from '../shared/product.service';
+import { Product } from '../../shared/product';
+import { ProductService } from '../../core/product.service';
 
 @Component({
-  templateUrl: './product-edit.component.html'
+  templateUrl: './product-edit.component.html',
 })
-export class ProductEditComponent implements OnInit{
-
+export class ProductEditComponent implements OnInit {
   pageTitle = 'Product Edit';
-  errorMessage: string;
-  productForm: FormGroup;
+  errorMessage: string = '';
+  productForm: any;
 
-  prodId:number;
-  product: Product;
+  prodId: number = 0;
+  product: Product = {
+    id: 0,
+    title: '',
+    price: 0,
+    rating: 0,
+    shortDescription: '',
+    description: '',
+    categories: [''],
+    image: '',
+  };
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private activatedroute: ActivatedRoute,
     private router: Router,
-    private productService: ProductService) {  }
+    private productService: ProductService
+  ) {}
 
   ngOnInit(): void {
     this.productForm = this.fb.group({
-      title: ['', [Validators.required,
-      Validators.minLength(3),
-      Validators.maxLength(50)]],
+      title: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50),
+        ],
+      ],
       categories: '',
       rating: '',
       price: '',
       description: '',
       shortDescription: '',
-      image: ''
+      image: '',
     });
 
     // Read the product Id from the route parameter
@@ -41,11 +70,10 @@ export class ProductEditComponent implements OnInit{
   }
 
   getProduct(id: number): void {
-    this.productService.getProductById(id)
-      .subscribe(
-        (product: Product) => this.displayProduct(product),
-        (error: any) => this.errorMessage = <any>error
-      );
+    this.productService.getProductById(id).subscribe(
+      (product: Product) => this.displayProduct(product),
+      (error: any) => (this.errorMessage = <any>error)
+    );
   }
 
   displayProduct(product: Product): void {
@@ -63,7 +91,7 @@ export class ProductEditComponent implements OnInit{
       description: this.product.description,
       shortDescription: this.product.shortDescription,
       categories: this.product.categories,
-      image: this.product.image
+      image: this.product.image,
     });
   }
 
@@ -73,29 +101,24 @@ export class ProductEditComponent implements OnInit{
       this.onSaveComplete();
     } else {
       if (confirm(`Really delete the product: ${this.product.title}?`)) {
-        this.productService.deleteProduct(this.product.id)
-          .subscribe(
-            () => this.onSaveComplete(),
-            (error: any) => this.errorMessage = <any>error
-          );
+        this.productService.deleteProduct(this.product.id).subscribe(
+          () => this.onSaveComplete(),
+          (error: any) => (this.errorMessage = <any>error)
+        );
       }
     }
   }
-
 
   saveProduct(): void {
     if (this.productForm.valid) {
       if (this.productForm.dirty) {
         this.product = this.productForm.value;
         this.product.id = this.prodId;
-        
-        this.productService.updateProduct(this.product)
-        .subscribe(
+
+        this.productService.updateProduct(this.product).subscribe(
           () => this.onSaveComplete(),
-          (error: any) => this.errorMessage = <any>error
+          (error: any) => (this.errorMessage = <any>error)
         );
-      
-        
       } else {
         this.onSaveComplete();
       }
