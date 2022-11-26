@@ -1,45 +1,24 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-// Import for loading & configuring in-memory web api
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-
-import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { FooterComponent } from './footer/footer.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { ProductItemComponent } from './product-item/product-item.component';
-import { ProductDetailComponent } from './product-detail/product-detail.component';
-import { ProductService } from './shared/product.service';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { AppRoutingModule } from './app-routing.module';
-import { ProductEditComponent } from './product-edit/product-edit.component';
-import { ProductData } from './shared/product-data';
-import { HttpClientModule } from '@angular/common/http';
-import { ProductNewComponent } from './product-new/product-new.component';
-
-
+import { AppComponent } from './app.component';
+import { CoreModule } from './core/core.module';
+import { HomeModule } from './home/home.module';
+import { ProductsModule } from './products/products.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    FooterComponent,
-    NavbarComponent,
-    ProductItemComponent,
-    ProductDetailComponent,
-    ProductEditComponent,
-    ProductNewComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
     BrowserModule,
-    HttpClientModule,
-    //InMemoryWebApiModule.forRoot(ProductData)
+    AppRoutingModule,
+    CoreModule,
+    HomeModule,
+    ProductsModule,
+    SharedModule,
   ],
-  providers: [ProductService],
-  bootstrap: [AppComponent]
+  providers: [],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
