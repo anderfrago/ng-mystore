@@ -1,32 +1,24 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { FooterComponent } from './footer/footer.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { ProductItemComponent } from './product-item/product-item.component';
-import { ProductDetailComponent } from './product-detail/product-detail.component';
-import { ProductService } from './shared/product.service';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { CoreModule } from './core/core.module';
+import { HomeModule } from './home/home.module';
+import { ProductsModule } from './products/products.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    FooterComponent,
-    NavbarComponent,
-    ProductItemComponent,
-    ProductDetailComponent
-  ],
+  declarations: [AppComponent],
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
+    BrowserModule,
     AppRoutingModule,
-    BrowserModule
+    CoreModule,
+    HomeModule,
+    ProductsModule,
+    SharedModule,
   ],
-  providers: [ProductService],
-  bootstrap: [AppComponent]
+  providers: [],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
