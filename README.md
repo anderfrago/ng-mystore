@@ -1,27 +1,33 @@
-# NgMystore
+## <small>EV2</small> Desarrollo de Interfaces
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.12.
+# ANGULAR
 
-## Development server
+Proyecto que realiza las operaciones básicas contra la entidad Productos; creación, lectura, actualización, borrado (CRUD).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Contiene varias ramas para ir avanzando en conceptos relacionados con el desarrollo Angular.
 
-## Code scaffolding
+## v1-core-shared:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+**Diseño modular basado en características.**
 
-## Build
+La idea es dividir la aplicación en **módulos de características** que representen diferentes funcionalidades de negocio.
+A continuación un diagrama que ilustra la separación de los módulos de características.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+![core-shared](https://dev-academy.com/angular-architecture-best-practices/large_imports.webp)
 
-## Running unit tests
+> Pietrucha, B. (2019). _Angular architecture and best practices_. Recuperado de [dev-academy](https://dev-academy.com/angular-architecture-best-practices/)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## v2-frontend-backend
 
-## Running end-to-end tests
+**Se agrega el apartado de backend mediante _express.js_.**
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Sustituimos _InMemoryWebApi_ por un Mock api realizado con _Express - Marco de aplicación web Node.js_, los valores no son persistentes ya que no hay conexion a base de datos.
 
-## Further help
+## v3_deployment
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+**Despliegue serverless**
+
+La aplicación se despliega en Netlify convirtiendo el backend en Functions.
+La base de datos en MongoDB Atlas.
+
+La aplicación final está disponible en https://ng-mystore.netlify.app/
