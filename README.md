@@ -25,9 +25,13 @@ Sustituimos _InMemoryWebApi_ por un Mock api realizado con _Express - Marco de a
 
 ## v3_deployment
 
+Despliegue distribuida de la aplicación.
+El backend en Heroku y la base de datos en MongoDB Atlas.
+El frontend en Firebase.
+
+## v4_serverless
+
 **Despliegue serverless**
 
 La aplicación se despliega en Netlify convirtiendo el backend en Functions.
-La base de datos en MongoDB Atlas.
-
 La aplicación final está disponible en https://ng-mystore.netlify.app/
