@@ -10,7 +10,7 @@ import { Product } from '../shared/product';
   providedIn: 'root',
 })
 export class ProductService {
-  private productsUrl = 'api/products';
+  private productsUrl = 'http://localhost:8000/products';
 
   constructor(private http: HttpClient) {}
 

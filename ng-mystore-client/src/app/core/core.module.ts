@@ -12,7 +12,7 @@ import { ProductData } from './product-data';
   imports: [
     CommonModule,
     HttpClientModule,
-    InMemoryWebApiModule.forRoot(ProductData),
+    // InMemoryWebApiModule.forRoot(ProductData),
   ],
   providers: [ProductService],
 })
