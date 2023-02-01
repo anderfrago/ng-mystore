@@ -23,6 +23,7 @@ A continuación un diagrama que ilustra la separación de los módulos de caract
 
 Sustituimos _InMemoryWebApi_ por un Mock api realizado con _Express - Marco de aplicación web Node.js_, los valores no son persistentes ya que no hay conexion a base de datos.
 
+
 ## v3_deployment
 
 Despliegue distribuida de la aplicación.
