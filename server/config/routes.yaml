@@ -1,0 +1,14 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+security:
+    resource:
+        path: ../src/Security/
+        namespace: App\Security
+    type: attribute
+
+
+api_login_check:
+    path: /api/login_check

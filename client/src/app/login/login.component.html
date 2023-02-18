@@ -1,0 +1,26 @@
+<form [formGroup]="form">
+    <fieldset class="form-group">
+        <legend>Acceder</legend>
+        <div class="continer">
+            <div class="row my-2">
+                <div class="col-2 d-flex justify-content-end">
+                    <label class="form-text text-muted ">Email:</label>
+                </div>
+                <div class="col-6">
+                    <input name="email" formControlName="email" class="form-control">
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-2  d-flex justify-content-end">
+                    <label class="form-text text-muted">Contraseña:</label>
+                </div>
+                <div class="col-6">
+                    <input name="password" formControlName="password" type="password" class="form-control">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="form-buttons">
+        <button class="btn btn-primary" (click)="login()">Aceptar</button>
+    </div>
+</form>
