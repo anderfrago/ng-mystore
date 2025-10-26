@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Product } from '../../shared/product';
 import { RouterModule } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
 })
 export class ProductItemComponent {
-  @Input() product: Product = {
+  readonly product = input<Product>({
     id: 0,
     title: '',
     price: 0,
@@ -19,5 +19,5 @@ export class ProductItemComponent {
     description: '',
     categories: [''],
     image: '',
-  };
+});
 }
