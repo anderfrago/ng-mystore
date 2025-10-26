@@ -5,9 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../core/product.service';
 
 @Component({
-  selector: 'app-product-new',
-  templateUrl: './product-new.component.html',
-  styleUrls: ['./product-new.component.css'],
+    selector: 'app-product-new',
+    templateUrl: './product-new.component.html',
+    styleUrls: ['./product-new.component.css'],
+    standalone: false
 })
 export class ProductNewComponent implements OnInit {
   pageTitle = 'Product New';

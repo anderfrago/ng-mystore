@@ -20,7 +20,8 @@ import { Product } from '../../shared/product';
 import { ProductService } from '../../core/product.service';
 
 @Component({
-  templateUrl: './product-edit.component.html',
+    templateUrl: './product-edit.component.html',
+    standalone: false
 })
 export class ProductEditComponent implements OnInit {
   pageTitle = 'Product Edit';

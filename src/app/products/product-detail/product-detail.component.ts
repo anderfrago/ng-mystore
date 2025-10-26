@@ -4,9 +4,10 @@ import { Product } from '../../shared/product';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-product-detail',
-  templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.css'],
+    selector: 'app-product-detail',
+    templateUrl: './product-detail.component.html',
+    styleUrls: ['./product-detail.component.css'],
+    standalone: false
 })
 export class ProductDetailComponent implements OnInit {
   product: Product = {
