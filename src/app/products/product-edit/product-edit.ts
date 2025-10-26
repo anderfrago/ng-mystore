@@ -1,32 +1,28 @@
 import {
   Component,
   OnInit,
-  AfterViewInit,
-  OnDestroy,
-  ViewChildren,
-  ElementRef,
 } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormControl,
-  FormArray,
   Validators,
-  FormControlName,
+  ReactiveFormsModule,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { Product } from '../../shared/product';
 import { ProductService } from '../../core/product.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    templateUrl: './product-edit.component.html',
-    standalone: false
+  templateUrl: './product-edit.html',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
 })
 export class ProductEditComponent implements OnInit {
   pageTitle = 'Product Edit';
   errorMessage: string = '';
-  productForm: any;
+  productForm!: FormGroup;
 
   prodId: number = 0;
   product: Product = {

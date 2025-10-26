@@ -11,7 +11,7 @@ export class ProductData implements InMemoryDbService {
         shortDescription: 'This is a short description of the First Product',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         categories: ['electronics', 'hardware'],
-        image: 'https://via.placeholder.com//820x320',
+        image: 'https://placehold.co/600x400',
       },
       {
         id: 1,
@@ -21,7 +21,7 @@ export class ProductData implements InMemoryDbService {
         shortDescription: 'This is a short description of the Second Product',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         categories: ['books'],
-        image: 'https://via.placeholder.com//820x320',
+        image: 'https://placehold.co/600x400',
       },
       {
         id: 2,
@@ -31,7 +31,7 @@ export class ProductData implements InMemoryDbService {
         shortDescription: 'This is a short description of the Third Product',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         categories: ['electronics'],
-        image: 'https://via.placeholder.com//820x320',
+        image: 'https://placehold.co/600x400',
       },
       {
         id: 3,
@@ -41,7 +41,7 @@ export class ProductData implements InMemoryDbService {
         shortDescription: 'This is a short description of the Fourth Product',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         categories: ['hardware'],
-        image: 'https://via.placeholder.com//820x320',
+        image: 'https://placehold.co/600x400',
       },
       {
         id: 4,
@@ -51,7 +51,7 @@ export class ProductData implements InMemoryDbService {
         shortDescription: 'This is a short description of the Fifth Product',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         categories: ['electronics', 'hardware'],
-        image: 'https://via.placeholder.com//820x320',
+        image: 'https://placehold.co/600x400',
       },
       {
         id: 5,
@@ -61,7 +61,7 @@ export class ProductData implements InMemoryDbService {
         shortDescription: 'This is a short description of the Sixth Product',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         categories: ['books'],
-        image: 'https://via.placeholder.com//820x320',
+        image: 'https://placehold.co/600x400',
       },
     ];
     return { products: products };

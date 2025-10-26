@@ -1,11 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { Product } from '../../shared/product';
+import { RouterModule } from '@angular/router';
 
 @Component({
-    selector: 'app-product-item',
-    templateUrl: './product-item.component.html',
-    styleUrls: ['./product-item.component.css'],
-    standalone: false
+  selector: 'app-product-item',
+  templateUrl: './product-item.html',
+  styleUrls: ['./product-item.css'],
+  standalone: true,
+  imports: [RouterModule],
 })
 export class ProductItemComponent {
   @Input() product: Product = {

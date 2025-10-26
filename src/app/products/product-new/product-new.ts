@@ -1,19 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Product } from '../../shared/product';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../core/product.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-product-new',
-    templateUrl: './product-new.component.html',
-    styleUrls: ['./product-new.component.css'],
-    standalone: false
+  selector: 'app-product-new',
+  templateUrl: './product-new.html',
+  styleUrls: ['./product-new.css'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
 })
 export class ProductNewComponent implements OnInit {
   pageTitle = 'Product New';
   errorMessage: string = '';
-  productForm: any;
+  productForm!: FormGroup;
 
   prodId: number = 0;
   product: Product = {

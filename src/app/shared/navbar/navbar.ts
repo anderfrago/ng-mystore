@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../core/product.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
-    selector: 'app-navbar',
-    templateUrl: './navbar.component.html',
-    styleUrls: ['./navbar.component.css'],
-    standalone: false
+  selector: 'app-navbar',
+  templateUrl: './navbar.html',
+  styleUrls: ['./navbar.css'],
+  standalone: true,
+  imports: [RouterModule],
 })
 export class NavbarComponent implements OnInit {
   id: any;
