@@ -10,7 +10,7 @@ import { Router, RouterModule } from '@angular/router';
   imports: [RouterModule],
 })
 export class NavbarComponent implements OnInit {
-  id: any;
+  id: number = 0;
 
   constructor(private productService: ProductService, private router: Router) {}
 
@@ -18,7 +18,9 @@ export class NavbarComponent implements OnInit {
 
   newProduct() {
     // Get max product Id from the product list
-    this.productService.getMaxProductId().subscribe((data) => (this.id = data));
-    this.router.navigate(['/products', this.id, 'new']);
+    this.productService.getMaxProductId().subscribe((data: number) => {
+      this.id = data + 1;
+      this.router.navigate(['/products', this.id, 'new']);
+    });
   }
 }
