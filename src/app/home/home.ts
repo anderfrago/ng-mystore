@@ -12,12 +12,9 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, ProductItemComponent],
 })
 export class HomeComponent implements OnInit {
-  products: Product[] = [];
-  constructor(private productService: ProductService) {}
+  constructor(public productService: ProductService) {} // Make productService public to access in template
 
   ngOnInit() {
-    this.productService
-      .getProducts()
-      .subscribe((data: Product[]) => (this.products = data));
+    this.productService.getProducts().subscribe(); // Trigger data fetch, signal is updated in service
   }
 }

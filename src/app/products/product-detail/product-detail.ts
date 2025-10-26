@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core'; // Import signal
 import { ProductService } from '../../core/product.service';
 import { Product } from '../../shared/product';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
 })
 export class ProductDetailComponent implements OnInit {
-  product: Product = {
+  product = signal<Product>({
     id: 0,
     title: '',
     price: 0,
@@ -21,7 +21,7 @@ export class ProductDetailComponent implements OnInit {
     description: '',
     categories: [''],
     image: '',
-  };
+  });
   prodId: number = 0;
 
   constructor(
@@ -34,7 +34,7 @@ export class ProductDetailComponent implements OnInit {
     this.prodId = parseInt(this.activatedroute.snapshot.params['productId']);
     this.productService
       .getProductById(this.prodId)
-      .subscribe((data: Product) => (this.product = data));
+      .subscribe((data: Product) => this.product.set(data)); // Update the signal
   }
   goEdit(): void {
     this.router.navigate(['/products', this.prodId, 'edit']);

@@ -23,16 +23,6 @@ export class ProductNewComponent implements OnInit {
   productForm!: FormGroup;
 
   prodId: number = 0;
-  product: Product = {
-    id: 0,
-    title: '',
-    price: 0,
-    rating: 0,
-    shortDescription: '',
-    description: '',
-    categories: [''],
-    image: '',
-  };
 
   constructor(
     private fb: FormBuilder,
@@ -66,10 +56,8 @@ export class ProductNewComponent implements OnInit {
   saveProduct(): void {
     if (this.productForm.valid) {
       if (this.productForm.dirty) {
-        this.product = this.productForm.value;
-        this.product.id = this.prodId;
-
-        this.productService.createProduct(this.product).subscribe(
+        const newProduct: Product = { ...this.productForm.value, id: 0 }; // Assign id 0 for new product
+        this.productService.createProduct(newProduct).subscribe(
           () => this.onSaveComplete(),
           (error: any) => (this.errorMessage = <any>error)
         );

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of, throwError } from 'rxjs';
@@ -11,15 +11,29 @@ import { Product } from '../shared/product';
 })
 export class ProductService {
   private productsUrl = 'api/products';
+  products = signal<Product[]>([]);
 
   constructor(private http: HttpClient) {}
 
-  getProducts(): Observable<Product[]> {
+  getProducts(): Observable<void> {
     return this.http.get<Product[]>(this.productsUrl).pipe(
-      tap((data) => console.log(JSON.stringify(data))),
+      tap((data) => {
+        console.log(JSON.stringify(data));
+        this.products.set(data);
+      }),
+      map(() => undefined), // Map to undefined as the signal is updated
       catchError(this.handleError)
     );
   }
+
+  // Computed signal for max product ID
+  maxProductId = computed(() => {
+    const products = this.products();
+    if (products.length === 0) {
+      return 0;
+    }
+    return Math.max(...products.map(p => p.id));
+  });
 
   getMaxProductId(): Observable<number> {
     return this.http.get<Product[]>(this.productsUrl).pipe(
@@ -50,7 +64,10 @@ export class ProductService {
     return this.http
       .post<Product>(this.productsUrl, product, { headers: headers })
       .pipe(
-        tap((data) => console.log('createProduct: ' + JSON.stringify(data))),
+        tap((data) => {
+          console.log('createProduct: ' + JSON.stringify(data));
+          this.products.update((products) => [...products, data]);
+        }),
         catchError(this.handleError)
       );
   }
@@ -59,7 +76,12 @@ export class ProductService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url = `${this.productsUrl}/${id}`;
     return this.http.delete<Product>(url, { headers: headers }).pipe(
-      tap((data) => console.log('deleteProduct: ' + id)),
+      tap(() => {
+        console.log('deleteProduct: ' + id);
+        this.products.update((products) =>
+          products.filter((p) => p.id !== id)
+        );
+      }),
       catchError(this.handleError)
     );
   }
@@ -68,7 +90,12 @@ export class ProductService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url = `${this.productsUrl}/${product.id}`;
     return this.http.put<Product>(url, product, { headers: headers }).pipe(
-      tap(() => console.log('updateProduct: ' + product.id)),
+      tap(() => {
+        console.log('updateProduct: ' + product.id);
+        this.products.update((products) =>
+          products.map((p) => (p.id === product.id ? product : p))
+        );
+      }),
       // Return the product on an update
       map(() => product),
       catchError(this.handleError)
