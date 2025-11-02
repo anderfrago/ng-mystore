@@ -14,10 +14,8 @@ import { CommonModule } from '@angular/common';
 export class ProductDetailComponent implements OnInit {
   product = signal<Product>({
     id: 0,
-    title: '',
+    name: '',
     price: 0,
-    rating: 0,
-    shortDescription: '',
     description: '',
     categories: [''],
     image: '',
@@ -32,10 +30,12 @@ export class ProductDetailComponent implements OnInit {
 
   ngOnInit() {
     this.prodId = parseInt(this.activatedroute.snapshot.params['productId']);
-    this.productService
-      .getProductById(this.prodId)
-      .subscribe((data: Product) => this.product.set(data)); // Update the signal
+
+    this.productService.getProductById(this.prodId).then(
+      (data: Product) => this.product.set(data)
+    );
   }
+  
   goEdit(): void {
     this.router.navigate(['/products', this.prodId, 'edit']);
   }

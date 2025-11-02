@@ -1,10 +1,9 @@
 <figure class="figure">
-  <img src="https://placehold.co/600x400" class="figure-img img-fluid rounded">
+  <img src="{{product().image}}" class="figure-img img-fluid rounded">
   <figcaption class="figure-caption">
-    <h4>Title: {{product().title}}</h4>
+    <h4>Name: {{product().name}}</h4>
     <h5>Price: {{product().price | currency}}</h5>
     <h5> Description: {{product().description}}</h5>
-    <h5> Rating: {{product().rating}}</h5>
     <h5>Categories: {{product().categories}}</h5>
   </figcaption>
 </figure>

@@ -1,9 +1,14 @@
+@let productValue = product();
+
+
 <figure class="figure">
-  <img src="{{product().image}}" class="figure-img img-fluid rounded">
+  <img src="{{productValue.image}}" class="figure-img img-fluid rounded">
   <figcaption class="figure-caption">
-    <h5><a [routerLink]="['/products', product().id]">{{product().title}}</a>
-      <span>{{product().price }}</span>
-    </h5>
-    <p>{{product().shortDescription}}</p>
+    <div class="d-flex justify-content-between ">
+      <a [routerLink]="['/products', productValue.id]">{{productValue.name}}</a>
+      <p>{{productValue.price }} € </p>
+    </div>
+    <p>{{productValue.description | slice:0:50 }}...</p>
+
   </figcaption>
 </figure>

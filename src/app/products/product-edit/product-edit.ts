@@ -29,10 +29,8 @@ export class ProductEditComponent implements OnInit {
   prodId: number = 0;
   product = signal<Product>({
     id: 0,
-    title: '',
+    name: '',
     price: 0,
-    rating: 0,
-    shortDescription: '',
     description: '',
     categories: [''],
     image: '',
@@ -73,23 +71,21 @@ export class ProductEditComponent implements OnInit {
       if (this.productForm) {
         this.productForm.reset();
       }
-      this.pageTitle = `Edit Product: ${product.title}`;
+      this.pageTitle = `Edit Product: ${product.name}`;
 
       // Update the data on the form
       this.productForm.patchValue({
-        title: product.title,
+        name: product.name,
         price: product.price,
-        rating: product.rating,
-        description: product.description,
-        shortDescription: product.shortDescription,
-        categories: product.categories,
         image: product.image,
+        description: product.description,
+        categories: product.categories,
       });
     });
   }
 
   getProduct(id: number): void {
-    this.productService.getProductById(id).subscribe(
+    this.productService.getProductById(id).then(
       (product: Product) => this.product.set(product), // Update the signal
       (error: any) => (this.errorMessage = <any>error)
     );
@@ -100,8 +96,8 @@ export class ProductEditComponent implements OnInit {
       // Don't delete, it was never saved.
       this.onSaveComplete();
     } else {
-      if (confirm(`Really delete the product: ${this.product().title}?`)) {
-        this.productService.deleteProduct(this.product().id).subscribe(
+      if (confirm(`Really delete the product: ${this.product().name}?`)) {
+       this.productService.deleteProduct(this.product().id).then(
           () => this.onSaveComplete(),
           (error: any) => (this.errorMessage = <any>error)
         );
@@ -115,10 +111,10 @@ export class ProductEditComponent implements OnInit {
         this.product.set(this.productForm.value);
         this.product().id = this.prodId;
 
-        this.productService.updateProduct(this.product()).subscribe(
+        this.productService.updateProduct( this.product() ).then(
           () => this.onSaveComplete(),
           (error: any) => (this.errorMessage = <any>error)
-        );
+        );        
       } else {
         this.onSaveComplete();
       }

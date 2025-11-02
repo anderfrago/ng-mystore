@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal, resource } from '@angular/core';
 import { Product } from '../shared/product';
 import { ProductService } from '../core/product.service';
 import { ProductItemComponent } from '../products/product-item/product-item';
@@ -11,10 +11,13 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, ProductItemComponent],
 })
-export class HomeComponent implements OnInit {
-  constructor(public productService: ProductService) {} // Make productService public to access in template
+export class HomeComponent  {
 
-  ngOnInit() {
-    this.productService.getProducts().subscribe(); // Trigger data fetch, signal is updated in service
-  }
+  constructor(public productService: ProductService) {}
+
+  public productsResource = resource({
+    loader: () => this.productService.getProducts(),
+  });
+
+
 }

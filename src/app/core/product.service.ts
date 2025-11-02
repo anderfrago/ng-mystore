@@ -1,29 +1,22 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, tap, map } from 'rxjs/operators';
-
 import { Product } from '../shared/product';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  private productsUrl = 'api/products';
+  private productsUrl = 'http://localhost:3000/products';
   products = signal<Product[]>([]);
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
-  getProducts(): Observable<void> {
-    return this.http.get<Product[]>(this.productsUrl).pipe(
-      tap((data) => {
-        console.log(JSON.stringify(data));
-        this.products.set(data);
-      }),
-      map(() => undefined), // Map to undefined as the signal is updated
-      catchError(this.handleError)
-    );
+  getProducts(): Promise<Product[]> {
+    return fetch(this.productsUrl)
+    .then((response) => response.json())
+    .then(data=>{
+      this.products.set(data);
+      return data;
+    })
   }
 
   // Computed signal for max product ID
@@ -35,72 +28,62 @@ export class ProductService {
     return Math.max(...products.map(p => p.id));
   });
 
-  getMaxProductId(): Observable<number> {
-    return this.http.get<Product[]>(this.productsUrl).pipe(
-      // Get max value from an array
-      map((data) =>
-        Math.max.apply(
-          Math,
-          data.map(function (o) {
-            return o.id;
-          })
-        )
-      ),
-      catchError(this.handleError)
-    );
+  getMaxProductId(): number {
+     return this.maxProductId();
   }
 
-  getProductById(id: number): Observable<Product> {
+  getProductById(id: number): Promise<Product> {
     const url = `${this.productsUrl}/${id}`;
-    return this.http.get<Product>(url).pipe(
-      tap((data) => console.log('getProduct: ' + JSON.stringify(data))),
-      catchError(this.handleError)
-    );
+    return fetch(url)
+    .then((response) => response.json())
+    .then(data=>data)
   }
 
-  createProduct(product: Product): Observable<Product> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  createProduct(product: Product): Promise<Product> {
     product.id = 0;
-    return this.http
-      .post<Product>(this.productsUrl, product, { headers: headers })
-      .pipe(
-        tap((data) => {
-          console.log('createProduct: ' + JSON.stringify(data));
-          this.products.update((products) => [...products, data]);
-        }),
-        catchError(this.handleError)
-      );
+    return fetch(this.productsUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(product)
+    })
+    .then((response) => response.json())
+    .then((data: Product) => {
+      console.log('createProduct: ' + JSON.stringify(data));
+      this.products.update((products) => [...products, data]);
+      return data;
+    });
   }
 
-  deleteProduct(id: number): Observable<{}> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  deleteProduct(id: number): Promise<void> {
     const url = `${this.productsUrl}/${id}`;
-    return this.http.delete<Product>(url, { headers: headers }).pipe(
-      tap(() => {
-        console.log('deleteProduct: ' + id);
-        this.products.update((products) =>
-          products.filter((p) => p.id !== id)
-        );
-      }),
-      catchError(this.handleError)
-    );
+    return fetch(url, {
+      method: 'DELETE'
+    }).then(() => {
+      console.log('deleteProduct: ' + id);
+      this.products.update((products) =>
+        products.filter((p) => p.id !== id)
+      );
+    } );
+  } 
+
+
+  updateProduct(product: Product): Promise<Product> {
+    //const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const url = `${this.productsUrl}/${product.id}`;
+    return fetch(url, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },    
+      body: JSON.stringify(product)
+    }).then(() => {
+      console.log('updateProduct: ' + product.id);
+      this.products.update((products) =>
+        products.map((p) => (p.id === product.id ? product : p))
+      );
+      return product;
+    });
   }
 
-  updateProduct(product: Product): Observable<Product> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const url = `${this.productsUrl}/${product.id}`;
-    return this.http.put<Product>(url, product, { headers: headers }).pipe(
-      tap(() => {
-        console.log('updateProduct: ' + product.id);
-        this.products.update((products) =>
-          products.map((p) => (p.id === product.id ? product : p))
-        );
-      }),
-      // Return the product on an update
-      map(() => product),
-      catchError(this.handleError)
-    );
-  }
+
 
   private handleError(err: any) {
     // in a real world app, we may send the server to some remote logging infrastructure
@@ -115,6 +98,6 @@ export class ProductService {
       errorMessage = `Backend returned code ${err.status}: ${err.body.error}`;
     }
     console.error(err);
-    return throwError(errorMessage);
+    return Promise.reject(errorMessage);
   }
 }

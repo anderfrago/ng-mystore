@@ -57,10 +57,12 @@ export class ProductNewComponent implements OnInit {
     if (this.productForm.valid) {
       if (this.productForm.dirty) {
         const newProduct: Product = { ...this.productForm.value, id: 0 }; // Assign id 0 for new product
-        this.productService.createProduct(newProduct).subscribe(
+        
+        this.productService.createProduct(newProduct).then(
           () => this.onSaveComplete(),
           (error: any) => (this.errorMessage = <any>error)
-        );
+        );    
+
       } else {
         this.onSaveComplete();
       }
