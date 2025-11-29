@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
 import { Product } from '../shared/product';
 
 @Injectable({
@@ -9,31 +7,40 @@ import { Product } from '../shared/product';
 export class ProductService {
   private productsUrl = 'http://localhost:3000/products';
 
-  constructor(private http: HttpClient) { }
-
-  getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.productsUrl);
+  getProducts(): Promise<Product[]> {
+ 
+    return fetch(this.productsUrl).then(response => {
+      return response.json();
+    });
   }
 
-  getProductById(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.productsUrl}/${id}`);
+  getProductById(id: number): Promise<Product > { 
+    return fetch(`${this.productsUrl}/${id}`).then(response => response.json());
   }
 
-  createProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.productsUrl, product);
+  createProduct(product: Product): Promise<Product> {
+    return fetch(this.productsUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(product)
+    }).then(response => response.json()); 
   }
 
-  updateProduct(product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.productsUrl}/${product.id}`, product);
+  updateProduct(product: Product): Promise<Product> {
+    return fetch(`${this.productsUrl}/${product.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(product)
+    }).then(response => response.json());
   }
 
-  deleteProduct(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.productsUrl}/${id}`);
+  deleteProduct(id: number): Promise<void> {
+    return fetch(`${this.productsUrl}/${id}`, {
+      method: 'DELETE'
+    }).then(() => {});
   }
 
-  getMaxProductId(): Observable<number> {
-    return this.getProducts().pipe(
-      map(products => Math.max(...products.map(product => product.id)))
-    );
+  getMaxProductId(): Promise<number> {
+    return this.getProducts().then(products => Math.max(...products.map(product => product.id)));
   }
 }

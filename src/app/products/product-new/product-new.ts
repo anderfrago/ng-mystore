@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, resource } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -29,7 +29,7 @@ export class ProductNewComponent implements OnInit {
     private activatedroute: ActivatedRoute,
     private router: Router,
     private productService: ProductService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.productForm = this.fb.group({
@@ -57,10 +57,11 @@ export class ProductNewComponent implements OnInit {
     if (this.productForm.valid) {
       if (this.productForm.dirty) {
         const newProduct: Product = { ...this.productForm.value, id: 0 }; // Assign id 0 for new product
-        this.productService.createProduct(newProduct).subscribe(
-          () => this.onSaveComplete(),
-          (error: any) => (this.errorMessage = <any>error)
-        );
+        resource({
+          loader: () => this.productService.createProduct(newProduct),
+        });
+        this.onSaveComplete()
+
       } else {
         this.onSaveComplete();
       }

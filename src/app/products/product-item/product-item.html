@@ -1,9 +1,10 @@
 <figure class="figure">
   <img src="{{product.image}}" class="figure-img img-fluid rounded">
   <figcaption class="figure-caption">
-    <h5><a [routerLink]="['/products', product.id]">{{product.title}}</a>
-      <span>{{product.price }}</span>
-    </h5>
-    <p>{{product.shortDescription}}</p>
+    <div class="d-flex justify-content-between">
+      <a style="text-decoration: none;" class="lead " [routerLink]="['/products', product.id]">{{product.name}}</a>
+      <span>{{product.price | currency:'EUR' }} </span>
+    </div>
+    <p>{{product.description | slice:0:50}}...</p>
   </figcaption>
 </figure>

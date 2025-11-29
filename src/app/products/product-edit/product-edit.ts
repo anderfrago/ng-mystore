@@ -2,7 +2,9 @@ import {
   Component,
   OnInit,
   signal, // Import signal
-  effect // Import effect
+  effect, // Import effect
+  resource,
+  WritableSignal
 } from '@angular/core';
 import {
   FormBuilder,
@@ -27,23 +29,23 @@ export class ProductEditComponent implements OnInit {
   productForm!: FormGroup;
 
   prodId: number = 0;
-  product = signal<Product>({
+  product : Product | undefined  = {
     id: 0,
-    title: '',
+    name: '',
     price: 0,
     rating: 0,
     shortDescription: '',
     description: '',
     categories: [''],
     image: '',
-  });
+  };
 
   constructor(
     private fb: FormBuilder,
     private activatedroute: ActivatedRoute,
     private router: Router,
     private productService: ProductService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.productForm = this.fb.group({
@@ -69,42 +71,43 @@ export class ProductEditComponent implements OnInit {
 
     // Use effect to react to product signal changes and update the form
     effect(() => {
-      const product = this.product();
-      if (this.productForm) {
-        this.productForm.reset();
-      }
-      this.pageTitle = `Edit Product: ${product.title}`;
+      if (this.product) {
+        if (this.productForm) {
+          this.productForm.reset();
+        }
+        this.pageTitle = `Edit Product: ${this.product.name}`;
 
-      // Update the data on the form
-      this.productForm.patchValue({
-        title: product.title,
-        price: product.price,
-        rating: product.rating,
-        description: product.description,
-        shortDescription: product.shortDescription,
-        categories: product.categories,
-        image: product.image,
-      });
+        // Update the data on the form
+        this.productForm.patchValue({
+          title: this.product.name,
+          price: this.product.price,
+          rating: this.product.rating,
+          description: this.product.description,
+          shortDescription: this.product.shortDescription,
+          categories: this.product.categories,
+          image: this.product.image,
+        });
+      }
     });
+    
   }
 
   getProduct(id: number): void {
-    this.productService.getProductById(id).subscribe(
-      (product: Product) => this.product.set(product), // Update the signal
-      (error: any) => (this.errorMessage = <any>error)
-    );
+    const productResource = resource({
+      loader: () => this.productService.getProductById(id) ,
+    });
+    this.product = productResource.value();
+
   }
 
   deleteProduct(): void {
-    if (this.product().id === 0) {
+    if (this.product!.id === 0) {
       // Don't delete, it was never saved.
       this.onSaveComplete();
     } else {
-      if (confirm(`Really delete the product: ${this.product().title}?`)) {
-        this.productService.deleteProduct(this.product().id).subscribe(
-          () => this.onSaveComplete(),
-          (error: any) => (this.errorMessage = <any>error)
-        );
+      if (confirm(`Really delete the product: ${this.product!.name}?`)) {        
+        this.productService.deleteProduct(this.product!.id),
+        this.onSaveComplete();
       }
     }
   }
@@ -112,13 +115,11 @@ export class ProductEditComponent implements OnInit {
   saveProduct(): void {
     if (this.productForm.valid) {
       if (this.productForm.dirty) {
-        this.product.set(this.productForm.value);
-        this.product().id = this.prodId;
+        this.product = this.productForm.value;
+        this.product!.id = this.prodId;               
+        this.productService.updateProduct(this.product!),
+        this.onSaveComplete();
 
-        this.productService.updateProduct(this.product()).subscribe(
-          () => this.onSaveComplete(),
-          (error: any) => (this.errorMessage = <any>error)
-        );
       } else {
         this.onSaveComplete();
       }

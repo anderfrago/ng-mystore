@@ -1,6 +1,13 @@
+@let ps = products || [];
+
+@if(ps.length === 0) {
+<p>No products available.</p>
+} @else {
 <div class="row">
-  <div *ngFor="let product of products" class="col-12 col-md-6  col-lg-4 mb-4">
+  @for (product of ps; track $index) {
+  <div class="col-12 col-md-6  col-lg-4 mb-4">
     <app-product-item [product]="product"></app-product-item>
   </div>
+  }
 </div>
-
+}

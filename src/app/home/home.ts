@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit, resource } from '@angular/core';
 import { Product } from '../shared/product';
 import { ProductService } from '../core/product.service';
 import { ProductItemComponent } from '../products/product-item/product-item';
@@ -11,14 +11,17 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, ProductItemComponent],
 })
-export class HomeComponent implements OnInit {
-  products: Product[] = [];
+export class HomeComponent {
+  products: Product[] | undefined = [];
 
-  constructor(private productService: ProductService) {}
-
-  ngOnInit() {
-    this.productService.getProducts().subscribe(products => {
-      this.products = products;
+  constructor(private productService: ProductService) {
+    const productsResource = resource({
+      loader: () => this.productService.getProducts(),
     });
+    effect(() => {
+      this.products = productsResource.value();
+    })
+
   }
+
 }
